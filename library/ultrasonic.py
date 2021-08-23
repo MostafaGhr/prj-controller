@@ -5,7 +5,11 @@ import time
 
 class Sonic():
     
-    def init(self, GPIO_TRIGGER = 18, GPIO_ECHO = 24):
+    def __init__(self, GPIO_TRIGGER = 18, GPIO_ECHO = 24):
+        '''
+        initializes the sonic sensor
+        with the given GPIO pin numbers
+        '''
         GPIO.setmode(GPIO.BCM)
         #set GPIO Pins
         self.GPIO_TRIGGER = GPIO_TRIGGER
@@ -16,6 +20,9 @@ class Sonic():
         GPIO.setup(self.GPIO_ECHO, GPIO.IN)
     
     def measure_distance(self):
+        '''
+        this function measures the distance from the sensor to the object in front of it
+        '''
         # set Trigger to HIGH
         GPIO.output(self.GPIO_TRIGGER, GPIO.HIGH)
     
@@ -43,4 +50,7 @@ class Sonic():
         return distance
 
     def convert_distance_to_percentage(self, distance):
+        '''
+        thid function converts distance to percentage according to the heigth of the tashcan
+        '''
         return int((35.0 - distance) / 30.0 * 100.0) if int((35.0 - distance) / 30.0 * 100.0) > 0 else 0

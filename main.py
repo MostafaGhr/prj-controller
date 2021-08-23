@@ -3,7 +3,7 @@ import threading
 import json
 
 import library.ultrasonic as Sonic
-import library.motor as motor
+from library.motor import Motor
 import settings
 
 import RPi.GPIO as GPIO          
@@ -12,9 +12,9 @@ import paho.mqtt.client as mqtt
 broker_address=settings.BROKER_URL
 client = mqtt.Client("Trashcan_" + str(settings.TASHCAN_ID))
 client.connect(broker_address) 
-client.publish("house/main-light","OFF")
 
 inner_sensor = Sonic.Sonic(26, 19)
+motor = Motor()
 
 def automatic_door():
     door_sensor = Sonic.Sonic(16, 20)

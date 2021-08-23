@@ -1,114 +1,69 @@
 import RPi.GPIO as GPIO          
 import time
+class Motor():
+    def __init__(self, in1=24, in2=23, en=25):
+        '''
+        intializes the motor class
+        and sets the pins to be outputs
+        and sets the en pin for pwm to control motor speed
+        '''
+        self.in1 = in1
+        self.in2 = in2
+        self.en = en
+        GPIO.setmode(GPIO.BCM)
 
-in1 = 24
-in2 = 23
-en = 25
-temp1 = 1
+        GPIO.setup(self.in1,GPIO.OUT)
+        GPIO.setup(self.in2,GPIO.OUT)
+        GPIO.setup(en,GPIO.OUT)
 
-GPIO.setmode(GPIO.BCM)
+        GPIO.output(self.in1,GPIO.LOW)
+        GPIO.output(self.in2,GPIO.LOW)
 
-GPIO.setup(in1,GPIO.OUT)
-GPIO.setup(in2,GPIO.OUT)
-GPIO.setup(en,GPIO.OUT)
+        p = GPIO.PWM(en,1000)
 
-GPIO.output(in1,GPIO.LOW)
-GPIO.output(in2,GPIO.LOW)
+        p.start(25)
 
-p = GPIO.PWM(en,1000)
-
-p.start(25)
-
-# set speed
-p.ChangeDutyCycle(100)
-
-def open_door():
-    print("opening door")
-    GPIO.output(in1,GPIO.HIGH)
-    GPIO.output(in2,GPIO.LOW)
-    time.sleep(1.17)
-    GPIO.output(in1,GPIO.LOW)
-    GPIO.output(in2,GPIO.LOW)
-
-def close_door():
-    print("closing door")
-    GPIO.output(in1,GPIO.LOW)
-    GPIO.output(in2,GPIO.HIGH)
-    time.sleep(1.1)
-    GPIO.output(in1,GPIO.LOW)
-    GPIO.output(in2,GPIO.LOW)
-
-def rotate(value):
-    if value > 0:
-        GPIO.output(in1,GPIO.HIGH)
-        GPIO.output(in2,GPIO.LOW)
-    elif value < 0:
-        value = value * -1
-        GPIO.output(in1,GPIO.LOW)
-        GPIO.output(in2,GPIO.HIGH)
-    time.sleep(value/10)
-    GPIO.output(in1,GPIO.LOW)
-    GPIO.output(in2,GPIO.LOW)
-
-def test():
-    while(1):
-
-        x=input()
-        
-        if x=='r':
-            print("run")
-            if(temp1==1):
-                GPIO.output(in1,GPIO.HIGH)
-                GPIO.output(in2,GPIO.LOW)
-                print("forward")
-                x='z'
-            else:
-                GPIO.output(in1,GPIO.LOW)
-                GPIO.output(in2,GPIO.HIGH)
-                print("backward")
-                x='z'
+        # set speed
+        p.ChangeDutyCycle(100)
 
 
-        elif x=='s':
-            print("stop")
-            GPIO.output(in1,GPIO.LOW)
-            GPIO.output(in2,GPIO.LOW)
-            x='z'
+        GPIO.setmode(GPIO.BCM)
 
-        elif x=='f':
-            print("forward")
-            GPIO.output(in1,GPIO.HIGH)
-            GPIO.output(in2,GPIO.LOW)
-            temp1=1
-            x='z'
+    def open_door(self):
+        '''
+        calling this function will open the door
+        '''
+        print("opening door")
+        GPIO.output(self.in1,GPIO.HIGH)
+        GPIO.output(self.in2,GPIO.LOW)
+        time.sleep(1.17)
+        GPIO.output(self.in1,GPIO.LOW)
+        GPIO.output(self.in2,GPIO.LOW)
 
-        elif x=='b':
-            print("backward")
-            GPIO.output(in1,GPIO.LOW)
-            GPIO.output(in2,GPIO.HIGH)
-            temp1=0
-            x='z'
+    def close_door(self):
+        '''
+        calling this function will close the door
+        '''
+        print("closing door")
+        GPIO.output(self.in1,GPIO.LOW)
+        GPIO.output(self.in2,GPIO.HIGH)
+        time.sleep(1.1)
+        GPIO.output(self.in1,GPIO.LOW)
+        GPIO.output(self.in2,GPIO.LOW)
 
-        elif x=='l':
-            print("low")
-            p.ChangeDutyCycle(25)
-            x='z'
-
-        elif x=='m':
-            print("medium")
-            p.ChangeDutyCycle(50)
-            x='z'
-
-        elif x=='h':
-            print("high")
-            p.ChangeDutyCycle(75)
-            x='z'
-        
-        
-        elif x=='e':
-            GPIO.cleanup()
-            break
-        
-        else:
-            print("<<<  wrong data  >>>")
-            print("please enter the defined data to continue.....")
+    def rotate(self, value):
+        '''
+        using this function will rotate motor in a given direction
+        using positive values will rotate clockwise
+        using negative values will rotate counterclockwise
+        '''
+        if value > 0:
+            GPIO.output(self.in1,GPIO.HIGH)
+            GPIO.output(self.in2,GPIO.LOW)
+        elif value < 0:
+            value = value * -1
+            GPIO.output(self.in1,GPIO.LOW)
+            GPIO.output(self.in2,GPIO.HIGH)
+        time.sleep(value/10)
+        GPIO.output(self.in1,GPIO.LOW)
+        GPIO.output(self.in2,GPIO.LOW)
